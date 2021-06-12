@@ -20,7 +20,7 @@ VIRUS = 7
 -- constructor for our map object
 function Map:init()
 
-    self.spritesheet = love.graphics.newImage('graphics/spritesheet6.png')
+    self.spritesheet = love.graphics.newImage('graphics/spritesheet.png')
     self.sprites = generateQuads(self.spritesheet, 80, 80)
 
     self.tileWidth = 80
