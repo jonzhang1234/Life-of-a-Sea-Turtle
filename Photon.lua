@@ -22,8 +22,8 @@ function Photon:init(x, y, width, height)
     self.map = map
     self.dy = 0
     self.dx = 0
-    self.coinX = {}
-    self.coinY = {}
+    self.maskX = {}
+    self.maskY = {}
 end
 
 --[[
@@ -33,8 +33,8 @@ end
 function Photon:reset()
     self.x = 115+(map.emptyX-2)*80
     self.y = 115+(map.emptyY-2)*80
-    self.coinX = {}
-    self.coinY = {}
+    self.maskX = {}
+    self.maskY = {}
 end
 
 
@@ -57,29 +57,29 @@ function Photon:checkWallCollision()
     end
 end
 
-function Photon:checkCoinCollision()
+function Photon:checkmaskCollision()
     if self.dx < 0 then
-        if self.map:collidesWithCoin(self.map:tileAt(self.x, self.y)) then
-            table.insert(self.coinX, self.x)
-            table.insert(self.coinY, self.y)
+        if self.map:collidesWithmask(self.map:tileAt(self.x, self.y)) then
+            table.insert(self.maskX, self.x)
+            table.insert(self.maskY, self.y)
             return true
         end
     elseif self.dx > 0 then
-        if self.map:collidesWithCoin(self.map:tileAt(self.x + PHOTON_SIZE, self.y)) then
-            table.insert(self.coinX, self.x + PHOTON_SIZE)
-            table.insert(self.coinY, self.y)
+        if self.map:collidesWithmask(self.map:tileAt(self.x + PHOTON_SIZE, self.y)) then
+            table.insert(self.maskX, self.x + PHOTON_SIZE)
+            table.insert(self.maskY, self.y)
             return true
         end
     elseif self.dy < 0 then
-        if self.map:collidesWithCoin(self.map:tileAt(self.x, self.y)) then
-            table.insert(self.coinX, self.x)
-            table.insert(self.coinY, self.y)
+        if self.map:collidesWithmask(self.map:tileAt(self.x, self.y)) then
+            table.insert(self.maskX, self.x)
+            table.insert(self.maskY, self.y)
             return true
         end
     elseif self.dy > 0 then
-        if self.map:collidesWithCoin(self.map:tileAt(self.x, self.y + PHOTON_SIZE)) then
-            table.insert(self.coinX, self.x)
-            table.insert(self.coinY, self.y + PHOTON_SIZE)
+        if self.map:collidesWithmask(self.map:tileAt(self.x, self.y + PHOTON_SIZE)) then
+            table.insert(self.maskX, self.x)
+            table.insert(self.maskY, self.y + PHOTON_SIZE)
             return true
         end
     end
