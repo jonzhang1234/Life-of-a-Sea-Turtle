@@ -14,7 +14,7 @@ LEFT_ARROW = 2
 UP_ARROW = 3
 RIGHT_ARROW = 4
 TARGET = 5
-COIN = 6
+MASK = 6
 VIRUS = 7
 
 -- constructor for our map object
@@ -55,13 +55,13 @@ function Map:init()
         x = x + 1
     end
 
-    for x = 1, math.random(1, 4) do
+    for x = 1, math.random(4, 8) do
         self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), VIRUS)
         x = x + 1
     end
     
-    for x = 1, math.random(1, 4) do
-        self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), COIN)
+    for x = 1, math.random(4, 8) do
+        self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), MASK)
         x = x + 1
     end
 
@@ -117,8 +117,8 @@ function Map:collidesWithTarget(tile)
     return false
 end
 
-function Map:collidesWithCoin(tile)
-    if tile.id == COIN then
+function Map:collidesWithmask(tile)
+    if tile.id == MASK then
         return true
     end
     return false
