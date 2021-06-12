@@ -100,9 +100,9 @@ function love.update(dt)
         photon.dy = 0
     elseif gameState == 'play' then
         photon:update(dt)
---[[        if photon:checkWallCollision() == true then
+        if photon:checkWallCollision() == true then
             gameState = 'defeat'
-        end]]
+        end
         if photon:checkVirusCollision() == true then
             if playerState == 'masked' then
 				if photon.dx < 0 then
