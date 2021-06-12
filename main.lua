@@ -66,6 +66,7 @@ function love.load()
     photon = Photon(115+(map.emptyX-2)*80, 115+(map.emptyY-2)*80, 10, 10)
 
     gameState = 'start'
+	playerState = 'unmasked'
 end
 
 --[[
@@ -99,13 +100,31 @@ function love.update(dt)
         photon.dy = 0
     elseif gameState == 'play' then
         photon:update(dt)
-        if photon:checkWallCollision() == true then
+--[[        if photon:checkWallCollision() == true then
             gameState = 'defeat'
-        end
+        end]]
         if photon:checkVirusCollision() == true then
-            gameState = 'defeat'
+            if playerState == 'masked' then
+				if photon.dx < 0 then
+				    map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
+					score = score + 1
+				elseif photon.dx > 0 then
+					map:setTile(math.floor((photon.x+10)/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
+					score = score + 1
+	            elseif photon.dy < 0 then
+		            map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
+			        score = score + 1
+			    elseif photon.dy > 0 then
+			        map:setTile(math.floor(photon.x/80)+1, math.floor((photon.y+10)/80)+1, TILE_EMPTY)
+			        score = score + 1
+			    end
+				playerState = 'unmasked'
+			elseif playerState == 'unmasked' then
+				gameState = 'defeat'
+			end
         end
-        if photon:checkCoinCollision() == true then
+        if photon:checkmaskCollision() == true then
+			playerState = 'masked'
             if photon.dx < 0 then
                 map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
                 score = score + 1
@@ -141,15 +160,15 @@ function love.keypressed(key)
             gameState = 'shoot'
         elseif gameState == 'defeat' then
             gameState = 'shoot'
-            score = score - getTableSize(photon.coinX)
-            for x = 1, getTableSize(photon.coinX) do
-                map:setTile(math.floor(photon.coinX[x]/80) + 1, math.floor(photon.coinY[x]/80) + 1, 6)
+            score = score - getTableSize(photon.maskX)
+            for x = 1, getTableSize(photon.maskX) do
+                map:setTile(math.floor(photon.maskX[x]/80) + 1, math.floor(photon.maskY[x]/80) + 1, 6)
             end
-            for x = 1, getTableSize(photon.coinX) do
-                table.remove(photon.coinX, photon.coinX[x])
+            for x = 1, getTableSize(photon.maskX) do
+                table.remove(photon.maskX, photon.maskX[x])
             end
-            for y = 1, getTableSize(photon.coinY) do
-                table.remove(photon.coinY, photon.coinY[y])
+            for y = 1, getTableSize(photon.maskY) do
+                table.remove(photon.maskY, photon.maskY[y])
             end
             photon:reset()
         elseif gameState == 'victory' then
@@ -182,7 +201,11 @@ function love.keypressed(key)
             photon.dx = 0
             photon.dy = PHOTON_SPEED
         end
-    end
+ --[[   elseif key == 'space' then
+		if gameState == 'play' then
+			if()--kill viruses around
+		end]]
+	end
 end
 
 --[[
