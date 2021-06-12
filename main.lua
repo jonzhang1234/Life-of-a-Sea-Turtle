@@ -101,10 +101,12 @@ function love.update(dt)
     elseif gameState == 'play' then
         photon:update(dt)
         if photon:checkWallCollision() == true then
-            gameState = 'defeat'
+            gameState = 'fell'
         end
         if photon:checkVirusCollision() == true then
-            if playerState == 'masked' then
+			if playerState == 'unmasked' then
+				gameState = 'defeat'
+			elseif playerState == 'masked' then
 				if photon.dx < 0 then
 				    map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
 					score = score + 1
@@ -119,12 +121,12 @@ function love.update(dt)
 			        score = score + 1
 			    end
 				playerState = 'unmasked'
-			elseif playerState == 'unmasked' then
-				gameState = 'defeat'
 			end
         end
         if photon:checkmaskCollision() == true then
-			playerState = 'masked'
+			if playerState == 'unmasked' then
+				playerState = 'masked'
+			end
             if photon.dx < 0 then
                 map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
                 score = score + 1
@@ -233,6 +235,10 @@ function love.draw()
     elseif gameState == 'defeat' then
         love.graphics.setFont(largeFont)
         love.graphics.printf('you contracted COVID-19', 0, 10, WINDOW_WIDTH, 'center')
+        love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+	elseif gameState == 'fell' then
+        love.graphics.setFont(largeFont)
+        love.graphics.printf('you fell out of the hospital', 0, 10, WINDOW_WIDTH, 'center')
         love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
     elseif gameState == 'victory' then
         -- UI messages
