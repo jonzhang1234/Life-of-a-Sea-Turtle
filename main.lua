@@ -45,12 +45,12 @@ function love.load()
     scoreFont = love.graphics.newFont('Quantum.otf', 64)
     love.graphics.setFont(smallFont)
 
-    sounds = {
+--[[    sounds = {
         ['paddle_hit'] = love.audio.newSource('sounds/paddle_hit.wav', 'static'),
         ['score'] = love.audio.newSource('sounds/score.wav', 'static'),
         ['wall_hit'] = love.audio.newSource('sounds/wall_hit.wav', 'static')
     }
-
+]]
     -- initialize window with virtual resolution
     push:setupScreen(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -206,10 +206,10 @@ function love.draw()
         love.graphics.setFont(smallFont)
         love.graphics.printf('use the arrow keys to shoot', 0, 5, WINDOW_WIDTH, 'center')
         love.graphics.printf('click on an arrow to change its direction', 0, 25, WINDOW_WIDTH, 'center')
-        love.graphics.printf('collect coins and make it to the target!', 0, 45, WINDOW_WIDTH, 'center')
+        love.graphics.printf('collect masks and make it to the target!', 0, 45, WINDOW_WIDTH, 'center')
     elseif gameState == 'defeat' then
         love.graphics.setFont(largeFont)
-        love.graphics.printf('you lost', 0, 10, WINDOW_WIDTH, 'center')
+        love.graphics.printf('you contracted COVID-19', 0, 10, WINDOW_WIDTH, 'center')
         love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
     elseif gameState == 'victory' then
         -- UI messages
