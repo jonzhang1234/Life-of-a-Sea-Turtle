@@ -50,9 +50,12 @@ function Map:init()
         end
     end
 
-    for x = 1, math.random(20, 25) do
-        self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), math.random(4))
-        x = x + 1
+	difficulty = 1
+    for x = 1, self.mapHeight do
+		for d = 1, 6/difficulty do
+			self:setTile(x, math.random(2, self.mapHeight - 1), math.random(4))
+			x = x + 1
+		end
     end
 
     for x = 1, math.random(4, 8) do
@@ -60,7 +63,7 @@ function Map:init()
         x = x + 1
     end
     
-    for x = 1, math.random(4, 8) do
+    for x = 1, math.random(8, 10) do
         self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), MASK)
         x = x + 1
     end
