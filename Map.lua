@@ -13,14 +13,14 @@ DOWN_ARROW = 1
 LEFT_ARROW = 2
 UP_ARROW = 3
 RIGHT_ARROW = 4
-TARGET = 5
+VACCINE = 5
 MASK = 6
 VIRUS = 7
 
 -- constructor for our map object
 function Map:init()
 
-    self.spritesheet = love.graphics.newImage('graphics/spritesheet.png')
+    self.spritesheet = love.graphics.newImage('graphics/spritesheet6.png')
     self.sprites = generateQuads(self.spritesheet, 80, 80)
 
     self.tileWidth = 80
@@ -31,8 +31,6 @@ function Map:init()
     self.emptyX = math.random(2, self.mapWidth - 1)
     self.emptyY = math.random(2, self.mapHeight - 1)
 
-    -- applies positive Y influence on anything affected
-    self.gravity = 15
 
 
 
@@ -50,9 +48,8 @@ function Map:init()
         end
     end
 
-	difficulty = 1
     for x = 1, self.mapHeight do
-		for d = 1, 6/difficulty do
+		for d = 1, 7-level do
 			self:setTile(x, math.random(2, self.mapHeight - 1), math.random(4))
 			x = x + 1
 		end
@@ -69,7 +66,7 @@ function Map:init()
     end
 
 
-    self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), TARGET)
+    self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), VACCINE)
 
     while self.emptyX == math.random(2, self.mapWidth - 1) and self.emptyY == math.random(2, self.mapHeight - 1) do
         self.emptyX = math.random(2, self.mapWidth - 1)
@@ -113,14 +110,14 @@ function Map:collidesWithDownArrow(tile)
     return false
 end
 
-function Map:collidesWithTarget(tile)
-    if tile.id == TARGET then
+function Map:collidesWithVaccine(tile)
+    if tile.id == VACCINE then
         return true
     end
     return false
 end
 
-function Map:collidesWithmask(tile)
+function Map:collidesWithMask(tile)
     if tile.id == MASK then
         return true
     end
@@ -165,4 +162,3 @@ function Map:render()
         end
     end
 end
-
