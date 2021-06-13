@@ -13,14 +13,15 @@ DOWN_ARROW = 1
 LEFT_ARROW = 2
 UP_ARROW = 3
 RIGHT_ARROW = 4
-VACCINE = 5
+TPAPER = 5
 MASK = 6
 VIRUS = 7
+VACCINE = 8
 
 -- constructor for our map object
 function Map:init()
 
-    self.spritesheet = love.graphics.newImage('graphics/spritesheet6.png')
+    self.spritesheet = love.graphics.newImage('graphics/spritesheet8.png')
     self.sprites = generateQuads(self.spritesheet, 80, 80)
 
     self.tileWidth = 80
@@ -65,8 +66,13 @@ function Map:init()
         x = x + 1
     end
 
-
-    self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), VACCINE)
+    if level~=6 then
+        self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), TPAPER)
+    end
+    
+    if level==6 then
+        self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), VACCINE)
+    end
 
     while self.emptyX == math.random(2, self.mapWidth - 1) and self.emptyY == math.random(2, self.mapHeight - 1) do
         self.emptyX = math.random(2, self.mapWidth - 1)
@@ -105,6 +111,13 @@ end
 
 function Map:collidesWithDownArrow(tile)
     if tile.id == DOWN_ARROW then
+        return true
+    end
+    return false
+end
+
+function Map:collidesWithTpaper(tile)
+    if tile.id == TPAPER then
         return true
     end
     return false
