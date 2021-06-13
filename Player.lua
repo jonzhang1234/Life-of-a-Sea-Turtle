@@ -88,6 +88,26 @@ function Player:checkVirusCollision()
     end
 end
 
+function Player:checkTpaperCollision()
+    if self.dx < 0 then
+        if self.map:collidesWithTpaper(self.map:tileAt(self.x + 45, self.y)) then
+            return true
+        end
+    elseif self.dx > 0 then
+        if self.map:collidesWithTpaper(self.map:tileAt(self.x - 35, self.y)) then
+            return true
+        end
+    elseif self.dy < 0 then
+        if self.map:collidesWithTpaper(self.map:tileAt(self.x, self.y + 45)) then
+            return true
+        end
+    elseif self.dy > 0 then
+        if self.map:collidesWithTpaper(self.map:tileAt(self.x, self.y - 35)) then
+            return true
+        end
+    end
+end
+
 function Player:checkVaccineCollision()
     if self.dx < 0 then
         if self.map:collidesWithVaccine(self.map:tileAt(self.x + 45, self.y)) then
