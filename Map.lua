@@ -49,11 +49,10 @@ function Map:init()
         end
     end
 
-    for x = 1, self.mapHeight do
-		for d = 1, 7-level do
-			self:setTile(x, math.random(2, self.mapHeight - 1), math.random(4))
-			x = x + 1
-		end
+
+    for x = 1, math.random(23-level, 26-level) do
+        self:setTile(math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), math.random(4))
+        x = x + 1
     end
 
     for x = 1, math.random(4, 8) do
