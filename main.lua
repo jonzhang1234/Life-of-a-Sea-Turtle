@@ -1,19 +1,12 @@
-
 push = require 'push'
 
--- the "Class" library we're using will allow us to represent anything in
--- our game as code, rather than keeping track of many disparate variables and
--- methods
 Class = require 'class'
 
--- our Paddle class, which stores position and dimensions for each Paddle
--- and the logic for rendering thems
-
--- our photon class, which isn't much different than a Paddle structure-wise
--- but which will mechanically function very differently
-require 'Photon'
+require 'Player'
 require 'Map'
 
+level = 1
+score = 0
 
 math.randomseed(os.time())
 map = Map()
@@ -22,24 +15,18 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 
-PHOTON_SPEED = 200
-PHOTON_SIZE = 10
+player_SPEED = 200
+player_SIZE = 10
 
---[[
-    Runs when the game first starts up, only once; used to initialize the game.
-]]
+
 function love.load()
     
-    -- set love's default filter to "nearest-neighbor", which essentially
-    -- means there will be no filtering of pixels (blurriness), which is
-    -- important for a nice crisp, 2D look
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
     -- set the title of our application window
-    love.window.setTitle('Photon')
+    love.window.setTitle('player')
 
 
-    -- initialize our nice-looking retro text fonts
     smallFont = love.graphics.newFont('Quantum.otf', 28)
     largeFont = love.graphics.newFont('Quantum.otf', 32)
     scoreFont = love.graphics.newFont('Quantum.otf', 64)
@@ -60,10 +47,9 @@ function love.load()
 
     -- initialize score variables, used for rendering on the screen and keeping
     -- track of the winner
-    score = 0
-    level = 1
 
-    photon = Photon(115+(map.emptyX-2)*80, 115+(map.emptyY-2)*80, 10, 10)
+
+    Player = Player(115+(map.emptyX-2)*80, 115+(map.emptyY-2)*80, 10, 10)
 
     gameState = 'start'
 	playerState = 'unmasked'
@@ -96,136 +82,116 @@ end
 ]]
 function love.update(dt)
     if gameState == 'shoot' then
-        photon.dx = PHOTON_SPEED
-        photon.dy = 0
+        Player.dx = player_SPEED
+        Player.dy = 0
     elseif gameState == 'play' then
-        photon:update(dt)
-        if photon:checkWallCollision() == true then
+        Player:update(dt)
+        if Player:checkWallCollision() == true then
             gameState = 'fell'
         end
-        if photon:checkVirusCollision() == true then
+        if Player:checkVirusCollision() == true then
 			if playerState == 'unmasked' then
 				gameState = 'defeat'
 			elseif playerState == 'masked' then
-				if photon.dx < 0 then
-				    map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
-					score = score + 1
-				elseif photon.dx > 0 then
-					map:setTile(math.floor((photon.x+10)/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
-					score = score + 1
-	            elseif photon.dy < 0 then
-		            map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
-			        score = score + 1
-			    elseif photon.dy > 0 then
-			        map:setTile(math.floor(photon.x/80)+1, math.floor((photon.y+10)/80)+1, TILE_EMPTY)
-			        score = score + 1
+				if Player.dx < 0 then
+				    map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+				elseif Player.dx > 0 then
+					map:setTile(math.floor((Player.x+10)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+	            elseif Player.dy < 0 then
+		            map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+			    elseif Player.dy > 0 then
+			        map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+10)/80)+1, TILE_EMPTY)
 			    end
 				playerState = 'unmasked'
 			end
         end
-        if photon:checkmaskCollision() == true then
+        if Player:checkMaskCollision() == true then
 			if playerState == 'unmasked' then
 				playerState = 'masked'
 			end
-            if photon.dx < 0 then
-                map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
-                score = score + 1
-            elseif photon.dx > 0 then
-                map:setTile(math.floor((photon.x+10)/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
-                score = score + 1
-            elseif photon.dy < 0 then
-                map:setTile(math.floor(photon.x/80)+1, math.floor(photon.y/80)+1, TILE_EMPTY)
-                score = score + 1
-            elseif photon.dy > 0 then
-                map:setTile(math.floor(photon.x/80)+1, math.floor((photon.y+10)/80)+1, TILE_EMPTY)
-                score = score + 1
+            if Player.dx < 0 then
+                map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+            elseif Player.dx > 0 then
+                map:setTile(math.floor((Player.x+10)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+            elseif Player.dy < 0 then
+                map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+            elseif Player.dy > 0 then
+                map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+10)/80)+1, TILE_EMPTY)
             end
         end
-        if photon:checkTargetCollision() == true then
+        if Player:checkVaccineCollision() == true then
             gameState = 'victory'
+            score = score + 1
         end
     end
 end
 
---[[
-    Keyboard handling, called by LÖVE2D each frame; 
-    passes in the key we pressed so we can access.
-]]
 function love.keypressed(key)
 
-    if key == 'escape' then
-        love.event.quit()
-    -- if we press enter during either the start or serve phase, it should
-    -- transition to the next appropriate state
-    elseif key == 'enter' or key == 'return' then
+    if key == 'enter' or key == 'return' then
         if gameState == 'start' then
             gameState = 'shoot'
-        elseif gameState == 'defeat' then
+        elseif gameState == 'defeat' or gameState == 'fell' then
             gameState = 'shoot'
-            score = score - getTableSize(photon.maskX)
-            for x = 1, getTableSize(photon.maskX) do
-                map:setTile(math.floor(photon.maskX[x]/80) + 1, math.floor(photon.maskY[x]/80) + 1, 6)
+            score = score - getTableSize(Player.maskX)
+            for x = 1, getTableSize(Player.maskX) do
+                map:setTile(math.floor(Player.maskX[x]/80) + 1, math.floor(Player.maskY[x]/80) + 1, 6)
             end
-            for x = 1, getTableSize(photon.maskX) do
-                table.remove(photon.maskX, photon.maskX[x])
+            for x = 1, getTableSize(Player.maskX) do
+                table.remove(Player.maskX, Player.maskX[x])
             end
-            for y = 1, getTableSize(photon.maskY) do
-                table.remove(photon.maskY, photon.maskY[y])
+            for y = 1, getTableSize(Player.maskY) do
+                table.remove(Player.maskY, Player.maskY[y])
             end
-            photon:reset()
+            Player:reset()
         elseif gameState == 'victory' then
             level = level + 1
             gameState = 'shoot'
             map:init()
-            photon:reset()
+            Player:reset()
         end
     elseif key == 'left'then
         if gameState == 'shoot' then
             gameState = 'play'
-            photon.dx = -PHOTON_SPEED
-            photon.dy = 0
+            Player.dx = -player_SPEED
+            Player.dy = 0
         end
     elseif key == 'right' then
         if gameState == 'shoot' then
             gameState = 'play'
-            photon.dx = PHOTON_SPEED
-            photon.dy = 0
+            Player.dx = player_SPEED
+            Player.dy = 0
         end
     elseif key == 'up' then
         if gameState == 'shoot' then
             gameState = 'play'
-            photon.dx = 0
-            photon.dy = -PHOTON_SPEED
+            Player.dx = 0
+            Player.dy = -player_SPEED
         end
     elseif key == 'down' then
         if gameState == 'shoot' then
             gameState = 'play'
-            photon.dx = 0
-            photon.dy = PHOTON_SPEED
+            Player.dx = 0
+            Player.dy = player_SPEED
         end
- --[[   elseif key == 'space' then
-		if gameState == 'play' then
-			if()--kill viruses around
-		end]]
+
+    elseif key == 'escape' then
+        map:init()
+        Player:reset()
 	end
 end
 
---[[
-    Called after update by LÖVE2D, used to draw anything to the screen, 
-    updated or otherwise.
-]]
+
 function love.draw()
     push:apply('start')
 
-    -- clear the screen with a specific color; in this case, a color similar
-    -- to some versions of the original Pong
     love.graphics.clear(0/255, 0/255, 0/255, 0/255)
     displayScore()
     displayLevel()
 
     if gameState == 'start' then
         love.graphics.setFont(largeFont)
-        love.graphics.printf('Welcome to Photon!', 0, 15, WINDOW_WIDTH, 'center')
+        love.graphics.printf('Welcome to player!', 0, 15, WINDOW_WIDTH, 'center')
         love.graphics.printf('press enter to begin!', 0, 40, WINDOW_WIDTH, 'center')
     elseif gameState == 'shoot' then
         love.graphics.setFont(smallFont)
@@ -241,23 +207,19 @@ function love.draw()
         love.graphics.printf('you fell out of the hospital', 0, 10, WINDOW_WIDTH, 'center')
         love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
     elseif gameState == 'victory' then
-        -- UI messages
         love.graphics.setFont(largeFont)
         love.graphics.printf('you won!', 0, 10, WINDOW_WIDTH, 'center')
         love.graphics.printf('press enter to play again!', 0, 30, WINDOW_WIDTH, 'center')
     end
 
     map:render()
-    photon:render()
+    Player:render()
 
     displayFPS()
 
     push:apply('end')
 end
 
---[[
-    Renders the current FPS.
-]]
 function displayFPS()
     -- simple FPS display across all states
     love.graphics.setFont(largeFont)
