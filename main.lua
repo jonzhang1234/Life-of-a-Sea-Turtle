@@ -88,6 +88,7 @@ function love.update(dt)
         Player:update(dt)
         if Player:checkWallCollision() == true then
             gameState = 'fell'
+            playerState = 'unmasked'
         end
         if Player:checkVirusCollision() == true then
 			if playerState == 'unmasked' then
@@ -121,6 +122,7 @@ function love.update(dt)
         end
         if Player:checkTpaperCollision() == true then
             gameState = 'victory'
+            playerState = 'unmasked'
             score = score + 1
         end
         if Player:checkVaccineCollision() == true then
@@ -137,7 +139,6 @@ function love.keypressed(key)
             gameState = 'shoot'
         elseif gameState == 'defeat' or gameState == 'fell' then
             gameState = 'shoot'
-            score = score - getTableSize(Player.maskX)
             for x = 1, getTableSize(Player.maskX) do
                 map:setTile(math.floor(Player.maskX[x]/80) + 1, math.floor(Player.maskY[x]/80) + 1, 6)
             end
