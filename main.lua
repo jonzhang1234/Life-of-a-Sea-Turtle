@@ -119,8 +119,12 @@ function love.update(dt)
                 map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+10)/80)+1, TILE_EMPTY)
             end
         end
-        if Player:checkVaccineCollision() == true then
+        if Player:checkTpaperCollision() == true then
             gameState = 'victory'
+            score = score + 1
+        end
+        if Player:checkVaccineCollision() == true then
+            gameState = 'finished'
             score = score + 1
         end
     end
@@ -189,27 +193,54 @@ function love.draw()
     displayScore()
     displayLevel()
 
-    if gameState == 'start' then
-        love.graphics.setFont(largeFont)
-        love.graphics.printf('Welcome to player!', 0, 15, WINDOW_WIDTH, 'center')
-        love.graphics.printf('press enter to begin!', 0, 40, WINDOW_WIDTH, 'center')
-    elseif gameState == 'shoot' then
-        love.graphics.setFont(smallFont)
-        love.graphics.printf('use the arrow keys to shoot', 0, 5, WINDOW_WIDTH, 'center')
-        love.graphics.printf('click on an arrow to change its direction', 0, 25, WINDOW_WIDTH, 'center')
-        love.graphics.printf('collect masks and make it to the target!', 0, 45, WINDOW_WIDTH, 'center')
-    elseif gameState == 'defeat' then
-        love.graphics.setFont(largeFont)
-        love.graphics.printf('you contracted COVID-19', 0, 10, WINDOW_WIDTH, 'center')
-        love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
-	elseif gameState == 'fell' then
-        love.graphics.setFont(largeFont)
-        love.graphics.printf('you fell out of the hospital', 0, 10, WINDOW_WIDTH, 'center')
-        love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
-    elseif gameState == 'victory' then
-        love.graphics.setFont(largeFont)
-        love.graphics.printf('you won!', 0, 10, WINDOW_WIDTH, 'center')
-        love.graphics.printf('press enter to play again!', 0, 30, WINDOW_WIDTH, 'center')
+    if level ~=6 then
+        if gameState == 'start' then
+            love.graphics.setFont(largeFont)
+            love.graphics.printf('Welcome to tp run!', 0, 15, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to begin!', 0, 40, WINDOW_WIDTH, 'center')
+        elseif gameState == 'shoot' then
+            love.graphics.setFont(smallFont)
+            love.graphics.printf('use the arrow keys to start walking', 0, 5, WINDOW_WIDTH, 'center')
+            love.graphics.printf('click on an arrow to change its direction', 0, 25, WINDOW_WIDTH, 'center')
+            love.graphics.printf('avoid the virus and make it to the toilet paper!', 0, 45, WINDOW_WIDTH, 'center')
+        elseif gameState == 'defeat' then
+            love.graphics.setFont(largeFont)
+            love.graphics.printf('you contracted COVID-19', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+        elseif gameState == 'fell' then
+            love.graphics.setFont(largeFont)
+            love.graphics.printf('you went too far', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+        elseif gameState == 'victory' then
+            love.graphics.setFont(largeFont)
+            love.graphics.printf('you got the toilet paper!', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to get the next roll!', 0, 30, WINDOW_WIDTH, 'center')
+        elseif gameState == 'finished' then
+            love.graphics.setFont(largeFont)
+            love.graphics.printf('you got the vaccine!', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you can now buy toilet paper without fear!', 0, 30, WINDOW_WIDTH, 'center')
+        end
+    end
+
+    if level == 6 or level == 7 then
+        if gameState == 'shoot' then
+            love.graphics.setFont(smallFont)
+            love.graphics.printf('use the arrow keys to start walking', 0, 5, WINDOW_WIDTH, 'center')
+            love.graphics.printf('click on an arrow to change its direction', 0, 25, WINDOW_WIDTH, 'center')
+            love.graphics.printf('avoid the virus and make it to the vaccine!', 0, 45, WINDOW_WIDTH, 'center')
+        elseif gameState == 'defeat' then
+            love.graphics.setFont(largeFont)
+            love.graphics.printf('you contracted COVID-19', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+        elseif gameState == 'fell' then
+            love.graphics.setFont(largeFont)
+            love.graphics.printf('you went too far', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+        elseif gameState == 'finished' then
+            love.graphics.setFont(largeFont)
+            love.graphics.printf('you got the vaccine!', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you can now buy toilet paper without fear!', 0, 30, WINDOW_WIDTH, 'center')
+        end
     end
 
     map:render()
