@@ -16,7 +16,7 @@ WINDOW_HEIGHT = 720
 
 
 player_SPEED = 200
-player_SIZE = 50
+player_SIZE = 75
 
 
 function love.load()
@@ -29,8 +29,8 @@ function love.load()
     love.window.setTitle('player')
 
 
-    smallFont = love.graphics.newFont('San.ttf', 28)
-    largeFont = love.graphics.newFont('San.ttf', 32)
+    smallFont = love.graphics.newFont('San.ttf', 24)
+    largeFont = love.graphics.newFont('San.ttf', 30)
     scoreFont = love.graphics.newFont('San.ttf', 64)
     love.graphics.setFont(smallFont)
 
@@ -267,7 +267,6 @@ function love.draw()
 
     if level ~=6 then
         if gameState == 'start' then
-            love.graphics.setFont(largeFont)
             love.graphics.printf('WELCOME TO LIFE OF A SEA TURTLE!', 0, 15, WINDOW_WIDTH, 'center')
             love.graphics.printf('PRESS ENTER TO BEGIN!', 0, 40, WINDOW_WIDTH, 'center')
         elseif gameState == 'shoot' then
@@ -277,20 +276,20 @@ function love.draw()
             love.graphics.printf('AVOID PLASTIC BAGS AND MAKE IT TO THE BEACH', 0, 45, WINDOW_WIDTH, 'center')
         elseif gameState == 'defeat' then
             love.graphics.setFont(largeFont)
-            love.graphics.printf('you contracted COVID-19', 0, 10, WINDOW_WIDTH, 'center')
-            love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you choked on a plastic bag', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to try again!', 0, 40, WINDOW_WIDTH, 'center')
         elseif gameState == 'fell' then
             love.graphics.setFont(largeFont)
             love.graphics.printf('you went too far', 0, 10, WINDOW_WIDTH, 'center')
-            love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to try again!', 0, 40, WINDOW_WIDTH, 'center')
         elseif gameState == 'victory' then
             love.graphics.setFont(largeFont)
-            love.graphics.printf('you got the toilet paper!', 0, 10, WINDOW_WIDTH, 'center')
-            love.graphics.printf('press enter to get the next roll!', 0, 30, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you got the jellyfish!', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to get to the next one!', 0, 40, WINDOW_WIDTH, 'center')
         elseif gameState == 'finished' then
             love.graphics.setFont(largeFont)
-            love.graphics.printf('you got the vaccine!', 0, 10, WINDOW_WIDTH, 'center')
-            love.graphics.printf('you can now buy toilet paper without fear!', 0, 30, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you got to the beach!', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you can now lay eggs without fear!', 0, 40, WINDOW_WIDTH, 'center')
             turtle = love.graphics.newImage("turtle_up.png")
             for i in range(100) do
                 love.graphics.draw(turtle, math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), math.random(0, 6.28), self.width/497/2, self.height/497/2)
@@ -301,21 +300,21 @@ function love.draw()
     if level == 6 or level == 7 then
         if gameState == 'shoot' then
             love.graphics.setFont(smallFont)
-            love.graphics.printf('use the arrow keys to start walking', 0, 5, WINDOW_WIDTH, 'center')
+            love.graphics.printf('use the arrow keys to start swimming', 0, 5, WINDOW_WIDTH, 'center')
             love.graphics.printf('click on an arrow to change its direction', 0, 25, WINDOW_WIDTH, 'center')
-            love.graphics.printf('avoid the virus and make it to the vaccine!', 0, 45, WINDOW_WIDTH, 'center')
+            love.graphics.printf('avoid the bags and make it to the beach!', 0, 45, WINDOW_WIDTH, 'center')
         elseif gameState == 'defeat' then
             love.graphics.setFont(largeFont)
-            love.graphics.printf('you contracted COVID-19', 0, 10, WINDOW_WIDTH, 'center')
-            love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you choked on a plastic bag', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to try again!', 0, 40, WINDOW_WIDTH, 'center')
         elseif gameState == 'fell' then
             love.graphics.setFont(largeFont)
             love.graphics.printf('you went too far', 0, 10, WINDOW_WIDTH, 'center')
-            love.graphics.printf('press enter to try again!', 0, 30, WINDOW_WIDTH, 'center')
+            love.graphics.printf('press enter to try again!', 0, 40, WINDOW_WIDTH, 'center')
         elseif gameState == 'finished' then
             love.graphics.setFont(largeFont)
-            love.graphics.printf('you got the vaccine!', 0, 10, WINDOW_WIDTH, 'center')
-            love.graphics.printf('you can now buy toilet paper without fear!', 0, 30, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you got to the beach!', 0, 10, WINDOW_WIDTH, 'center')
+            love.graphics.printf('you can now lay eggs without fear!', 0, 40, WINDOW_WIDTH, 'center')
             turtle = love.graphics.newImage("turtle_up.png")
             for i=1, 100, 1 do
                 love.graphics.draw(turtle, math.random(2, 16*80- 1), math.random(2, 9*80 - 1), math.random(0, 6.28), player_SIZE/497/2, player_SIZE/497/2)
