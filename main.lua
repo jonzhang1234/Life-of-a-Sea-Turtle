@@ -273,7 +273,7 @@ function love.draw()
             love.graphics.setFont(smallFont)
             love.graphics.printf('USE THE ARROW KEYS TO START SWIMMING', 0, 5, WINDOW_WIDTH, 'center')
             love.graphics.printf('CLICK ON AN ARROW TO CHANGE THE DIRECTION OF THE CURRENT', 0, 25, WINDOW_WIDTH, 'center')
-            love.graphics.printf('AVOID PLASTIC BAGS AND MAKE IT TO THE BEACH', 0, 45, WINDOW_WIDTH, 'center')
+            love.graphics.printf('AVOID PLASTIC BAGS AND MAKE IT TO THE JELLYFISH', 0, 45, WINDOW_WIDTH, 'center')
         elseif gameState == 'defeat' then
             love.graphics.setFont(largeFont)
             love.graphics.printf('you choked on a plastic bag', 0, 10, WINDOW_WIDTH, 'center')
