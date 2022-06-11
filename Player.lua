@@ -14,8 +14,8 @@ end
 
 
 function Player:reset()
-    self.x = 115+(map.emptyX-2)*80
-    self.y = 115+(map.emptyY-2)*80
+    self.x = 120-self.width/2+(map.emptyX-2)*80
+    self.y = 120-self.width/2+(map.emptyY-2)*80
     self.maskX = {}
     self.maskY = {}
 end
@@ -30,8 +30,24 @@ function Player:update(dt)
     self.y = self.y + self.dy * dt
 end
 
-function Player:render()
-    love.graphics.rectangle('fill', self.x, self.y, self.width, self.height)
+function Player:renderUp()
+    turtle = love.graphics.newImage("turtle_up.png")
+    love.graphics.draw(turtle, self.x, self.y, 0, self.width/497, self.height/497)
+end
+
+function Player:renderRight()
+    turtle = love.graphics.newImage("turtle_right.png")
+    love.graphics.draw(turtle, self.x, self.y, 0, self.width/497, self.height/497)
+end
+
+function Player:renderDown()
+    turtle = love.graphics.newImage("turtle_down.png")
+    love.graphics.draw(turtle, self.x, self.y, 0, self.width/497, self.height/497)
+end
+
+function Player:renderLeft()
+    turtle = love.graphics.newImage("turtle_left.png")
+    love.graphics.draw(turtle, self.x, self.y, 0, self.width/497, self.height/497)
 end
 
 function Player:checkWallCollision()
@@ -90,19 +106,19 @@ end
 
 function Player:checkTpaperCollision()
     if self.dx < 0 then
-        if self.map:collidesWithTpaper(self.map:tileAt(self.x + 45, self.y)) then
+        if self.map:collidesWithTpaper(self.map:tileAt(self.x + 40 +self.width/2, self.y)) then
             return true
         end
     elseif self.dx > 0 then
-        if self.map:collidesWithTpaper(self.map:tileAt(self.x - 35, self.y)) then
+        if self.map:collidesWithTpaper(self.map:tileAt(self.x - 40+self.width/2, self.y)) then
             return true
         end
     elseif self.dy < 0 then
-        if self.map:collidesWithTpaper(self.map:tileAt(self.x, self.y + 45)) then
+        if self.map:collidesWithTpaper(self.map:tileAt(self.x, self.y + 40 +self.width/2)) then
             return true
         end
     elseif self.dy > 0 then
-        if self.map:collidesWithTpaper(self.map:tileAt(self.x, self.y - 35)) then
+        if self.map:collidesWithTpaper(self.map:tileAt(self.x, self.y - 40+self.width/2, self.y)) then
             return true
         end
     end
@@ -110,19 +126,19 @@ end
 
 function Player:checkVaccineCollision()
     if self.dx < 0 then
-        if self.map:collidesWithVaccine(self.map:tileAt(self.x + 45, self.y)) then
+        if self.map:collidesWithVaccine(self.map:tileAt(self.x + 40 +self.width/2, self.y)) then
             return true
         end
     elseif self.dx > 0 then
-        if self.map:collidesWithVaccine(self.map:tileAt(self.x - 35, self.y)) then
+        if self.map:collidesWithVaccine(self.map:tileAt(self.x - 40+self.width/2, self.y), self.y) then
             return true
         end
     elseif self.dy < 0 then
-        if self.map:collidesWithVaccine(self.map:tileAt(self.x, self.y + 45)) then
+        if self.map:collidesWithVaccine(self.map:tileAt(self.x, self.y + 40 +self.width/2)) then
             return true
         end
     elseif self.dy > 0 then
-        if self.map:collidesWithVaccine(self.map:tileAt(self.x, self.y - 35)) then
+        if self.map:collidesWithVaccine(self.map:tileAt(self.x, self.y - 40+self.width/2, self.y)) then
             return true
         end
     end
@@ -152,7 +168,7 @@ end
 function Player:checkRightCollision()
     if self.dx > 0 then
         if self.map:collidesWithLeftArrow(self.map:tileAt(self.x + player_SIZE, self.y)) then
-            self.x = self.map:tileAt(self.x + player_SIZE, self.y).x * self.map.tileWidth - self.map.tileWidth
+            self.x = self.x
             self.dx = -player_SPEED
         elseif self.map:collidesWithRightArrow(self.map:tileAt(self.x + player_SIZE, self.y)) then
             self.x = self.map:tileAt(self.x + player_SIZE, self.y).x * self.map.tileWidth
@@ -204,7 +220,7 @@ function Player:checkDownCollision()
             self.x = self.map:tileAt(self.x , self.y + player_SIZE).x * self.map.tileWidth
             self.y = (self.map:tileAt(self.x , self.y + player_SIZE).y - 0.5) * self.map.tileWidth - player_SIZE / 2
         elseif self.map:collidesWithUpArrow(self.map:tileAt(self.x, self.y + player_SIZE)) then
-            self.y = self.map:tileAt(self.x, self.y + player_SIZE).y * self.map.tileWidth - self.map.tileWidth
+            self.y = self.y
             self.dy = -player_SPEED
         elseif self.map:collidesWithDownArrow(self.map:tileAt(self.x, self.y + player_SIZE)) then
             self.y = (self.map:tileAt(self.x, self.y + player_SIZE).y) * self.map.tileWidth
