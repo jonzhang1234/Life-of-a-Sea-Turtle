@@ -20,6 +20,8 @@ player_SIZE = 10
 
 
 function love.load()
+
+    image = love.graphics.newImage("kelp.png")
     
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -27,9 +29,9 @@ function love.load()
     love.window.setTitle('player')
 
 
-    smallFont = love.graphics.newFont('Quantum.otf', 28)
-    largeFont = love.graphics.newFont('Quantum.otf', 32)
-    scoreFont = love.graphics.newFont('Quantum.otf', 64)
+    smallFont = love.graphics.newFont('San.ttf', 28)
+    largeFont = love.graphics.newFont('San.ttf', 32)
+    scoreFont = love.graphics.newFont('San.ttf', 64)
     love.graphics.setFont(smallFont)
 
 --[[    sounds = {
@@ -121,6 +123,15 @@ function love.update(dt)
             end
         end
         if Player:checkTpaperCollision() == true then
+            if Player.dx < 0 then
+                map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+            elseif Player.dx > 0 then
+                map:setTile(math.floor((Player.x+10)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+            elseif Player.dy < 0 then
+                map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+            elseif Player.dy > 0 then
+                map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+10)/80)+1, TILE_EMPTY)
+            end
             gameState = 'victory'
             playerState = 'unmasked'
             score = score + 1
@@ -186,24 +197,74 @@ function love.keypressed(key)
 	end
 end
 
+local COLOR_MUL = love._version >= "11.0" and 1 or 255
+
+function gradientMesh(dir, ...)
+    -- Check for direction
+    local isHorizontal = true
+    if dir == "vertical" then
+        isHorizontal = false
+    elseif dir ~= "horizontal" then
+        error("bad argument #1 to 'gradient' (invalid value)", 2)
+    end
+
+    -- Check for colors
+    local colorLen = select("#", ...)
+    if colorLen < 2 then
+        error("color list is less than two", 2)
+    end
+
+    -- Generate mesh
+    local meshData = {}
+    if isHorizontal then
+        for i = 1, colorLen do
+            local color = select(i, ...)
+            local x = (i - 1) / (colorLen - 1)
+
+            meshData[#meshData + 1] = {x, 1, x, 1, color[1], color[2], color[3], color[4] or (1 * COLOR_MUL)}
+            meshData[#meshData + 1] = {x, 0, x, 0, color[1], color[2], color[3], color[4] or (1 * COLOR_MUL)}
+        end
+    else
+        for i = 1, colorLen do
+            local color = select(i, ...)
+            local y = (i - 1) / (colorLen - 1)
+
+            meshData[#meshData + 1] = {1, y, 1, y, color[1], color[2], color[3], color[4] or (1 * COLOR_MUL)}
+            meshData[#meshData + 1] = {0, y, 0, y, color[1], color[2], color[3], color[4] or (1 * COLOR_MUL)}
+        end
+    end
+
+    -- Resulting Mesh has 1x1 image size
+    return love.graphics.newMesh(meshData, "strip", "static")
+end
+
+mesh = gradientMesh('vertical', {0, 169, 204}, {0, 0, 255})
 
 function love.draw()
     push:apply('start')
 
-    love.graphics.clear(0/255, 0/255, 0/255, 0/255)
+    love.graphics.clear(0, 0, 0, 0)
+    love.graphics.draw(mesh, 0, 0, 0, love.graphics.getDimensions())
+    love.graphics.draw(image, -100, 230)
+    love.graphics.draw(image, 125, 220)
+    love.graphics.draw(image, 350, 230)
+    love.graphics.draw(image, 575, 220)
+    love.graphics.draw(image, 800, 230)
+    love.graphics.draw(image, 1025, 220)
+    
     displayScore()
     displayLevel()
 
     if level ~=6 then
         if gameState == 'start' then
             love.graphics.setFont(largeFont)
-            love.graphics.printf('Welcome to tp run!', 0, 15, WINDOW_WIDTH, 'center')
-            love.graphics.printf('press enter to begin!', 0, 40, WINDOW_WIDTH, 'center')
+            love.graphics.printf('WELCOME TO LIFE OF A SEA TURTLE!', 0, 15, WINDOW_WIDTH, 'center')
+            love.graphics.printf('PRESS ENTER TO BEGIN!', 0, 40, WINDOW_WIDTH, 'center')
         elseif gameState == 'shoot' then
             love.graphics.setFont(smallFont)
-            love.graphics.printf('use the arrow keys to start walking', 0, 5, WINDOW_WIDTH, 'center')
-            love.graphics.printf('click on an arrow to change its direction', 0, 25, WINDOW_WIDTH, 'center')
-            love.graphics.printf('avoid the virus and make it to the toilet paper!', 0, 45, WINDOW_WIDTH, 'center')
+            love.graphics.printf('USE THE ARROW KEYS TO START SWIMMING', 0, 5, WINDOW_WIDTH, 'center')
+            love.graphics.printf('CLICK ON AN ARROW TO CHANGE THE DIRECTION OF THE CURRENT', 0, 25, WINDOW_WIDTH, 'center')
+            love.graphics.printf('AVOID PLASTIC BAGS AND MAKE IT TO THE BEACH', 0, 45, WINDOW_WIDTH, 'center')
         elseif gameState == 'defeat' then
             love.graphics.setFont(largeFont)
             love.graphics.printf('you contracted COVID-19', 0, 10, WINDOW_WIDTH, 'center')
