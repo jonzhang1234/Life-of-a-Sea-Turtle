@@ -21,7 +21,7 @@ VACCINE = 8
 -- constructor for our map object
 function Map:init()
 
-    self.spritesheet = love.graphics.newImage('graphics/Turtlespritesheet.png')
+    self.spritesheet = love.graphics.newImage('graphics/turtlespritesheet.png')
     self.sprites = generateQuads(self.spritesheet, 80, 80)
 
     self.tileWidth = 80

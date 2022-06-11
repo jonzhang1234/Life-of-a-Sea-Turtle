@@ -16,7 +16,7 @@ WINDOW_HEIGHT = 720
 
 
 player_SPEED = 200
-player_SIZE = 10
+player_SIZE = 50
 
 
 function love.load()
@@ -51,10 +51,11 @@ function love.load()
     -- track of the winner
 
 
-    Player = Player(115+(map.emptyX-2)*80, 115+(map.emptyY-2)*80, 10, 10)
+    Player = Player(120-0.5*player_SIZE+(map.emptyX-2)*80, 120-0.5*player_SIZE+(map.emptyY-2)*80, player_SIZE, player_SIZE)
 
     gameState = 'start'
 	playerState = 'unmasked'
+    orientation = 'up'
 end
 
 --[[
@@ -88,6 +89,15 @@ function love.update(dt)
         Player.dy = 0
     elseif gameState == 'play' then
         Player:update(dt)
+        if Player.dy == 0 and Player.dx < 0 then
+            orientation = 'left'
+        elseif Player.dy == 0 and Player.dx >= 0  then    
+            orientation = 'right'
+        elseif Player.dx ==0 and Player.dy < 0 then
+            orientation = 'up'
+        elseif Player.dx == 0 and Player.dy >= 0  then
+            orientation = 'down'
+        end
         if Player:checkWallCollision() == true then
             gameState = 'fell'
             playerState = 'unmasked'
@@ -99,11 +109,11 @@ function love.update(dt)
 				if Player.dx < 0 then
 				    map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
 				elseif Player.dx > 0 then
-					map:setTile(math.floor((Player.x+10)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+					map:setTile(math.floor((Player.x+player_SIZE)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
 	            elseif Player.dy < 0 then
 		            map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
 			    elseif Player.dy > 0 then
-			        map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+10)/80)+1, TILE_EMPTY)
+			        map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+player_SIZE)/80)+1, TILE_EMPTY)
 			    end
 				playerState = 'unmasked'
 			end
@@ -115,22 +125,22 @@ function love.update(dt)
             if Player.dx < 0 then
                 map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
             elseif Player.dx > 0 then
-                map:setTile(math.floor((Player.x+10)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+                map:setTile(math.floor((Player.x+player_SIZE)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
             elseif Player.dy < 0 then
                 map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
             elseif Player.dy > 0 then
-                map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+10)/80)+1, TILE_EMPTY)
+                map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+player_SIZE)/80)+1, TILE_EMPTY)
             end
         end
         if Player:checkTpaperCollision() == true then
             if Player.dx < 0 then
                 map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
             elseif Player.dx > 0 then
-                map:setTile(math.floor((Player.x+10)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
+                map:setTile(math.floor((Player.x+player_SIZE)/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
             elseif Player.dy < 0 then
                 map:setTile(math.floor(Player.x/80)+1, math.floor(Player.y/80)+1, TILE_EMPTY)
             elseif Player.dy > 0 then
-                map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+10)/80)+1, TILE_EMPTY)
+                map:setTile(math.floor(Player.x/80)+1, math.floor((Player.y+player_SIZE)/80)+1, TILE_EMPTY)
             end
             gameState = 'victory'
             playerState = 'unmasked'
@@ -306,7 +316,16 @@ function love.draw()
     end
 
     map:render()
-    Player:render()
+
+    if orientation == 'up' then
+        Player:renderUp()
+    elseif orientation == 'right' then
+        Player:renderRight()
+    elseif orientation == 'down' then
+        Player:renderDown()
+    elseif orientation == 'left' then
+        Player:renderLeft()
+    end
 
     displayFPS()
 
