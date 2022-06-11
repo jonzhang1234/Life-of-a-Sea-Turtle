@@ -291,6 +291,10 @@ function love.draw()
             love.graphics.setFont(largeFont)
             love.graphics.printf('you got the vaccine!', 0, 10, WINDOW_WIDTH, 'center')
             love.graphics.printf('you can now buy toilet paper without fear!', 0, 30, WINDOW_WIDTH, 'center')
+            turtle = love.graphics.newImage("turtle_up.png")
+            for i in range(100) do
+                love.graphics.draw(turtle, math.random(2, self.mapWidth - 1), math.random(2, self.mapHeight - 1), math.random(0, 6.28), self.width/497/2, self.height/497/2)
+            end
         end
     end
 
@@ -312,6 +316,10 @@ function love.draw()
             love.graphics.setFont(largeFont)
             love.graphics.printf('you got the vaccine!', 0, 10, WINDOW_WIDTH, 'center')
             love.graphics.printf('you can now buy toilet paper without fear!', 0, 30, WINDOW_WIDTH, 'center')
+            turtle = love.graphics.newImage("turtle_up.png")
+            for i=1, 100, 1 do
+                love.graphics.draw(turtle, math.random(2, 16*80- 1), math.random(2, 9*80 - 1), math.random(0, 6.28), player_SIZE/497/2, player_SIZE/497/2)
+            end
         end
     end
 
